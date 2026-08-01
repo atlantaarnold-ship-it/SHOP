@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="NawaShop Store - Premium gaming utility store with member dashboard and cyberpunk UI." />
+    <title>NawaShop Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true">
+      <canvas id="particles"></canvas>
+    </div>
+
+    <button class="floating-btn" type="button" aria-label="Quick support">⚡</button>
+    <a class="back-to-top" href="#top" aria-label="Back to top">↑</a>
+
+    <div class="auth-overlay" id="auth-overlay">
+      <div class="auth-card">
+        <button class="close-auth" id="close-auth" aria-label="Close">×</button>
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-auth="login">เข้าสู่ระบบ</button>
+          <button class="auth-tab" data-auth="register">สมัครสมาชิก</button>
+          <button class="auth-tab" data-auth="forgot">ลืมรหัสผ่าน</button>
+        </div>
+
+        <form class="auth-form active" id="login-form">
+          <h3>ยินดีต้อนรับกลับ</h3>
+          <p>เข้าถึงพื้นที่สมาชิกและบริการพรีเมียมของคุณ</p>
+          <label>
+            อีเมล
+            <input type="email" id="login-email" placeholder="name@example.com" required />
+          </label>
+          <label>
+            รหัสผ่าน
+            <div class="password-wrap">
+              <input type="password" id="login-password" placeholder="••••••••" required />
+              <button class="toggle-password" type="button" data-target="login-password">Show</button>
+            </div>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="remember-me" />
+            <span>Remember Me</span>
+          </label>
+          <button class="btn btn-primary full" type="submit">เข้าสู่ระบบ</button>
+          <div class="social-grid">
+            <button class="social-btn" type="button" data-social="google">Google</button>
+            <button class="social-btn" type="button" data-social="discord">Discord</button>
+          </div>
+        </form>
+
+        <form class="auth-form" id="register-form">
+          <h3>สร้างบัญชีใหม่</h3>
+          <p>เปิดประสบการณ์เกมระดับพรีเมียมทันที</p>
+          <label>
+            Username
+            <input type="text" id="register-username" placeholder="NexKnight" required />
+          </label>
+          <label>
+            อีเมล
+            <input type="email" id="register-email" placeholder="name@example.com" required />
+          </label>
+          <label>
+            รหัสผ่าน
+            <div class="password-wrap">
+              <input type="password" id="register-password" placeholder="••••••••" required />
+              <button class="toggle-password" type="button" data-target="register-password">Show</button>
+            </div>
+          </label>
+          <label>
+            ยืนยันรหัสผ่าน
+            <div class="password-wrap">
+              <input type="password" id="register-confirm" placeholder="••••••••" required />
+              <button class="toggle-password" type="button" data-target="register-confirm">Show</button>
+            </div>
+          </label>
+          <button class="btn btn-primary full" type="submit">สมัครสมาชิก</button>
+        </form>
+
+        <form class="auth-form" id="forgot-form">
+          <h3>ลืมรหัสผ่าน</h3>
+          <p>ระบบจะส่งคำแนะนำการรีเซ็ตรหัสผ่านให้คุณ</p>
+          <label>
+            อีเมล
+            <input type="email" id="forgot-email" placeholder="name@example.com" required />
+          </label>
+          <button class="btn btn-primary full" type="submit">ส่งคำแนะนำ</button>
+        </form>
+      </div>
+    </div>
+
+    <header class="site-header" id="top">
+      <nav class="navbar container">
+        <a class="brand" href="#" data-view="landing">
+          <span class="brand-mark">N</span>
+          <span class="brand-text">NawaShop</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links">
+          <a href="#" data-view="landing">Home</a>
+          <a href="#" data-view="landing">Store</a>
+          <a href="#" data-view="topup">เติมเงิน</a>
+          <a href="#" data-view="orders">ประวัติคำสั่งซื้อ</a>
+          <a href="#" data-view="dashboard">Dashboard</a>
+          <a href="#" data-view="admin">Admin</a>
+        </div>
+
+        <div class="nav-actions">
+          <label class="search-wrap" aria-label="Search">
+            <input type="text" placeholder="ค้นหา..." />
+            <span>⌕</span>
+          </label>
+          <div class="auth-nav" id="auth-nav">
+            <button class="btn btn-ghost" id="login-btn" type="button">Login</button>
+            <button class="btn btn-primary" id="register-btn" type="button">Register</button>
+          </div>
+          <div class="member-nav hidden" id="member-nav">
+            <button class="icon-btn" id="notify-btn" type="button">🔔<span class="dot" id="notify-count">3</span></button>
+            <a class="wallet-pill" href="#" data-view="topup">฿ <span id="wallet-balance">2,450</span></a>
+            <div class="member-chip">
+              <img id="nav-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="avatar" />
+              <span id="nav-username">NexKnight</span>
+            </div>
+            <button class="btn btn-outline" id="logout-btn" type="button">Logout</button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="view-panel active" id="landing-view">
+        <section class="hero container" id="home">
+          <div class="hero-copy reveal">
+            <p class="eyebrow">Premium Gaming Utility Ecosystem</p>
+            <h1>ยินดีต้อนรับสู่ <span>NawaShop</span> Store</h1>
+            <p class="hero-description">ศูนย์รวมเครื่องมือและยูทิลิตี้สำหรับเกม พร้อมบริการรวดเร็ว ระบบอัตโนมัติ และการอัปเดตอย่างต่อเนื่อง</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" data-view="dashboard" type="button">เริ่มใช้งาน</button>
+              <button class="btn btn-outline" data-view="product" type="button">วิธีใช้งาน</button>
+            </div>
+            <div class="typing-line"><span class="typing-text" aria-live="polite"></span></div>
+          </div>
+
+          <div class="hero-cards">
+            <div class="feature-card reveal">
+              <div class="icon">⭐</div>
+              <h3>คุณภาพสูง</h3>
+              <p>บริการที่ผ่านการคัดสรรอย่างดี พร้อมความน่าเชื่อถือ</p>
+            </div>
+            <div class="feature-card reveal">
+              <div class="icon">🛡</div>
+              <h3>ปลอดภัย</h3>
+              <p>ระบบจัดการข้อมูลและการชำระเงินที่ปลอดภัย</p>
+            </div>
+            <div class="feature-card reveal">
+              <div class="icon">⚡</div>
+              <h3>รวดเร็ว</h3>
+              <p>ส่งมอบทันทีด้วยระบบอัตโนมัติที่ลื่นไหล</p>
+            </div>
+            <div class="feature-card reveal">
+              <div class="icon">💬</div>
+              <h3>Support 24 ชั่วโมง</h3>
+              <p>ทีมช่วยเหลือพร้อมตอบทุกคำถามตลอด 24 ชั่วโมง</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats container reveal">
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <h3 class="count" data-target="4760">0</h3>
+            <p>ผู้ใช้งาน</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <h3 class="count" data-target="55">0</h3>
+            <p>สินค้า</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🗃</div>
+            <h3 class="count" data-target="87276">0</h3>
+            <p>คลังสินค้า</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🛒</div>
+            <h3 class="count" data-target="19325">0</h3>
+            <p>ขายแล้ว</p>
+          </div>
+        </section>
+
+        <section class="section container">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Browse by Category</p>
+            <h2>ค้นหาสินค้าตามหมวดหมู่</h2>
+          </div>
+          <div class="category-grid">
+            <button class="category-card reveal" type="button" data-category="PC"> <span>PC</span><small>ระบบแรงค์สุดคุ้ม</small></button>
+            <button class="category-card reveal" type="button" data-category="Android"> <span>Android</span><small>รองรับมือถือทุกรุ่น</small></button>
+            <button class="category-card reveal" type="button" data-category="iOS"> <span>iOS</span><small>ประสิทธิภาพสูงบน Apple</small></button>
+            <button class="category-card reveal" type="button" data-category="Emulator"> <span>Emulator</span><small>เล่นบนคอมได้ทุกที่</small></button>
+            <button class="category-card reveal" type="button" data-category="Utility"> <span>Utility</span><small>เครื่องมือแนะนำเกม</small></button>
+            <button class="category-card reveal" type="button" data-category="VIP"> <span>VIP</span><small>สิทธิพิเศษสำหรับสมาชิก</small></button>
+          </div>
+        </section>
+
+        <section class="section container">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Featured Products</p>
+            <h2>สินค้าขายดีจากร้านระดับพรีเมียม</h2>
+          </div>
+          <div class="product-grid">
+            <article class="product-card reveal">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='420' viewBox='0 0 600 420'%3E%3Crect width='600' height='420' rx='28' fill='%23080808'/%3E%3Cpath d='M120 300h360' stroke='%23ff1e1e' stroke-width='10' stroke-linecap='round'/%3E%3Ccircle cx='180' cy='170' r='64' fill='none' stroke='%23d40000' stroke-width='10'/%3E%3Cpath d='M310 130h110v90H310z' fill='%23ff3b3b' fill-opacity='0.86'/%3E%3Cpath d='M330 170h70' stroke='white' stroke-width='10' stroke-linecap='round'/%3E%3C/svg%3E" alt="Product" loading="lazy" />
+              <div class="badges"><span class="badge hot">ขายดี</span><span class="badge new">NEW</span></div>
+              <h3>Ultimate Pro Pack</h3>
+              <p class="price">฿1,990</p>
+              <div class="meta"><span>คงเหลือ 24 ชิ้น</span><span>ขายแล้ว 1.2k</span></div>
+              <button class="btn btn-primary" data-view="product" type="button">ดูรายละเอียด</button>
+            </article>
+            <article class="product-card reveal">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='420' viewBox='0 0 600 420'%3E%3Crect width='600' height='420' rx='28' fill='%23080808'/%3E%3Crect x='120' y='110' width='360' height='200' rx='22' fill='%23111111' stroke='%23ff1e1e' stroke-width='8'/%3E%3Cpath d='M210 250c20-65 80-95 140-95' stroke='%23ff1e1e' stroke-width='8' fill='none'/%3E%3Ccircle cx='220' cy='280' r='16' fill='%23ff1e1e'/%3E%3Ccircle cx='360' cy='180' r='16' fill='%23ff1e1e'/%3E%3C/svg%3E" alt="Product" loading="lazy" />
+              <div class="badges"><span class="badge hot">ขายดี</span></div>
+              <h3>Velocity Utility Kit</h3>
+              <p class="price">฿890</p>
+              <div class="meta"><span>คงเหลือ 56 ชิ้น</span><span>ขายแล้ว 870</span></div>
+              <button class="btn btn-primary" data-view="product" type="button">ดูรายละเอียด</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="section container">
+          <div class="feature-grid">
+            <div class="feature-item reveal"><h3>Dark Mode</h3><p>โหมดมืดที่สะท้อนความลึกและความเป็นเกมเมอร์</p></div>
+            <div class="feature-item reveal"><h3>Loading Screen</h3><p>หน้าจอโหลดที่สวยงามและลื่นไหลพร้อมเอฟเฟกต์</p></div>
+            <div class="feature-item reveal"><h3>Scroll Animation</h3><p>เอฟเฟกต์การเลื่อนที่นุ่มนวลและมีสไตล์เกม</p></div>
+            <div class="feature-item reveal"><h3>Floating Button</h3><p>ปุ่มช่วยเหลือแชทที่พร้อมอยู่เสมอ</p></div>
+            <div class="feature-item reveal"><h3>Back To Top</h3><p>ย้อนกลับขึ้นด้านบนในเวลาอันรวดเร็ว</p></div>
+            <div class="feature-item reveal"><h3>Particle Background</h3><p>พื้นหลังที่เคลื่อนไหวและเติมเต็มบรรยากาศ cyberpunk</p></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view-panel container" id="dashboard-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Member Dashboard</p>
+            <h2>พื้นที่สมาชิกของคุณ</h2>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" data-view="topup" type="button">เติมเงิน</button>
+            <button class="btn btn-outline" data-view="settings" type="button">ตั้งค่า</button>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="glass-card profile-card reveal">
+            <div class="profile-top">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="profile" />
+              <div>
+                <h3 id="profile-name">NexKnight</h3>
+                <p id="profile-email">nex@nas.shop</p>
+                <span class="pill">VIP Member</span>
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div><strong>UID</strong><span>#104281</span></div>
+              <div><strong>ยอดเงิน</strong><span id="dash-balance">฿ 2,450</span></div>
+              <div><strong>วันที่สมัคร</strong><span>01/08/2026</span></div>
+              <div><strong>สินค้า</strong><span>12 อัน</span></div>
+            </div>
+          </div>
+          <div class="glass-card reveal">
+            <h3>ประวัติการเติมเงินล่าสุด</h3>
+            <ul class="history-list">
+              <li><span>เติมเงิน PromptPay</span><strong>+฿500</strong></li>
+              <li><span>เติมเงิน TrueMoney</span><strong>+฿300</strong></li>
+              <li><span>โบนัส VIP</span><strong>+฿200</strong></li>
+            </ul>
+          </div>
+          <div class="glass-card reveal">
+            <h3>สรุปสถานะ</h3>
+            <div class="mini-grid">
+              <div><span>ระดับ</span><strong>VIP</strong></div>
+              <div><span>คงเหลือ</span><strong>24 ชิ้น</strong></div>
+              <div><span>รอส่ง</span><strong>3 รายการ</strong></div>
+              <div><span>แจ้งเตือน</span><strong>3 ใหม่</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-panel container" id="topup-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Top Up</p>
+            <h2>เติมเงินแบบรวดเร็วและปลอดภัย</h2>
+          </div>
+        </div>
+        <div class="topup-grid">
+          <div class="glass-card reveal">
+            <h3>เลือกช่องทาง</h3>
+            <div class="method-list">
+              <label class="method-card active"><input type="radio" name="method" checked /> PromptPay</label>
+              <label class="method-card"><input type="radio" name="method" /> TrueMoney Wallet</label>
+              <label class="method-card"><input type="radio" name="method" /> โอนธนาคาร</label>
+            </div>
+            <label>
+              จำนวนเงิน
+              <input type="number" id="topup-amount" min="100" step="100" value="500" />
+            </label>
+            <button class="btn btn-primary full" id="create-qr" type="button">สร้าง QR</button>
+            <div class="qr-box" id="qr-box">QR PromptPay พร้อมสำหรับชำระ</div>
+            <div class="preview-box">
+              <p>ยอดเงินก่อนเติม: <strong id="before-balance">฿ 2,450</strong></p>
+              <p>ยอดเงินหลังเติม: <strong id="after-balance">฿ 2,950</strong></p>
+            </div>
+            <button class="btn btn-outline full" id="complete-topup" type="button">จำลองชำระสำเร็จ</button>
+          </div>
+          <div class="glass-card reveal">
+            <h3>ประวัติเติมเงิน</h3>
+            <ul class="history-list">
+              <li><span>PromptPay</span><strong>+฿500</strong></li>
+              <li><span>TrueMoney</span><strong>+฿300</strong></li>
+              <li><span>Bank Transfer</span><strong>+฿1000</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-panel container" id="orders-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Order History</p>
+            <h2>ประวัติคำสั่งซื้อของคุณ</h2>
+          </div>
+          <div class="search-row">
+            <input type="text" id="order-search" placeholder="ค้นหา order / สินค้า" />
+          </div>
+        </div>
+        <div class="filter-row reveal">
+          <button class="filter-pill active" data-filter="all">ทั้งหมด</button>
+          <button class="filter-pill" data-filter="success">สำเร็จ</button>
+          <button class="filter-pill" data-filter="pending">รอดำเนินการ</button>
+          <button class="filter-pill" data-filter="cancel">ยกเลิก</button>
+        </div>
+        <div class="glass-card reveal">
+          <table class="order-table">
+            <thead>
+              <tr><th>Order ID</th><th>วันที่</th><th>ชื่อสินค้า</th><th>ราคา</th><th>สถานะ</th><th>การดำเนินการ</th></tr>
+            </thead>
+            <tbody id="orders-body"></tbody>
+          </table>
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </section>
+
+      <section class="view-panel container" id="product-view">
+        <div class="product-shell reveal">
+          <div class="product-media">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='560' viewBox='0 0 800 560'%3E%3Crect width='800' height='560' rx='28' fill='%23080808'/%3E%3Crect x='120' y='150' width='560' height='260' rx='28' fill='%23111111' stroke='%23ff1e1e' stroke-width='10'/%3E%3Cpath d='M220 360l120-160 120 140 140-185' stroke='%23ff1e1e' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" alt="Product" />
+            <div class="thumb-row">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90' viewBox='0 0 120 90'%3E%3Crect width='120' height='90' rx='12' fill='%23080808'/%3E%3Cpath d='M20 70l30-35 20 20 25-32' stroke='%23ff1e1e' stroke-width='6' fill='none'/%3E%3C/svg%3E" alt="thumb" />
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90' viewBox='0 0 120 90'%3E%3Crect width='120' height='90' rx='12' fill='%23080808'/%3E%3Ccircle cx='60' cy='45' r='24' stroke='%23ff1e1e' stroke-width='6' fill='none'/%3E%3C/svg%3E" alt="thumb" />
+            </div>
+          </div>
+          <div class="product-details">
+            <div class="badges"><span class="badge hot">ขายดี</span><span class="badge new">NEW</span></div>
+            <h2>Ultimate Pro Pack</h2>
+            <p class="price">฿1,990</p>
+            <div class="rating">★★★★★ 4.9 (420 รีวิว)</div>
+            <p>ชุดยูทิลิตี้สำหรับเกมที่ดูแลทุกขั้นตอนตั้งแต่การติดตั้ง การปรับแต่ง และการควบคุมประสิทธิภาพ</p>
+            <div class="detail-list">
+              <div><strong>จุดเด่น</strong><span>ความเสถียรสูง</span></div>
+              <div><strong>วิธีใช้งาน</strong><span>ติดตั้งง่าย</span></div>
+              <div><strong>ความต้องการ</strong><span>Windows 10+</span></div>
+            </div>
+            <div class="product-actions">
+              <button class="btn btn-primary" id="buy-now" type="button">ซื้อสินค้า</button>
+              <button class="btn btn-outline" id="favorite-btn" type="button">♡ เพิ่มรายการโปรด</button>
+            </div>
+            <div class="meta"><span>คงเหลือ 24 ชิ้น</span><span>ขายแล้ว 1.2k</span></div>
+          </div>
+          <aside class="sidebar-card">
+            <h3>สินค้าแนะนำ</h3>
+            <div class="suggest-card">Velocity Utility Kit</div>
+            <div class="suggest-card">Boost Core Bundle</div>
+            <div class="suggest-card">VIP Nexus Access</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view-panel container" id="cart-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Cart</p>
+            <h2>ตะกร้าสินค้าของคุณ</h2>
+          </div>
+        </div>
+        <div class="cart-grid">
+          <div class="glass-card reveal" id="cart-items"></div>
+          <div class="glass-card reveal">
+            <h3>สรุปคำสั่งซื้อ</h3>
+            <label>
+              คูปองส่วนลด
+              <input type="text" id="coupon" placeholder="PROMO10" />
+            </label>
+            <button class="btn btn-outline full" id="apply-coupon" type="button">ใช้คูปอง</button>
+            <div class="summary-line"><span>Subtotal</span><strong id="subtotal">฿0</strong></div>
+            <div class="summary-line"><span>Discount</span><strong id="discount">฿0</strong></div>
+            <div class="summary-line total"><span>Total</span><strong id="total">฿0</strong></div>
+            <button class="btn btn-primary full" id="checkout-btn" type="button">Checkout</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-panel container" id="settings-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Settings</p>
+            <h2>ตั้งค่าบัญชีผู้ใช้</h2>
+          </div>
+        </div>
+        <div class="settings-grid">
+          <div class="glass-card reveal">
+            <h3>ข้อมูลพื้นฐาน</h3>
+            <label>เปลี่ยนรูปโปรไฟล์<input type="file" /></label>
+            <label>ชื่อ<input type="text" value="NexKnight" /></label>
+            <label>อีเมล<input type="email" value="nex@nas.shop" /></label>
+            <button class="btn btn-primary full" type="button">บันทึกข้อมูล</button>
+          </div>
+          <div class="glass-card reveal">
+            <h3>ความปลอดภัย</h3>
+            <label>รหัสผ่านใหม่<input type="password" /></label>
+            <label class="switch-row"><span>Two-Factor Authentication</span><input type="checkbox" checked /></label>
+            <label class="switch-row"><span>เปิดการแจ้งเตือน</span><input type="checkbox" checked /></label>
+            <button class="btn btn-outline full" type="button">เปลี่ยนธีม</button>
+            <button class="btn btn-outline danger full" type="button">ลบบัญชี</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view-panel container" id="notifications-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Notification Center</p>
+            <h2>ศูนย์แจ้งเตือน</h2>
+          </div>
+        </div>
+        <div class="glass-card reveal" id="notifications-list"></div>
+      </section>
+
+      <section class="view-panel container" id="admin-view">
+        <div class="panel-header reveal">
+          <div>
+            <p class="eyebrow">Admin Dashboard</p>
+            <h2>ศูนย์ควบคุมผู้ดูแลระบบ</h2>
+          </div>
+        </div>
+        <div class="admin-grid">
+          <div class="glass-card reveal"><h3>จำนวนสมาชิก</h3><p class="metric">4,760</p></div>
+          <div class="glass-card reveal"><h3>ยอดขายวันนี้</h3><p class="metric">฿48,200</p></div>
+          <div class="glass-card reveal"><h3>ยอดขายเดือนนี้</h3><p class="metric">฿324,900</p></div>
+          <div class="glass-card reveal"><h3>จำนวนออเดอร์</h3><p class="metric">1,240</p></div>
+          <div class="glass-card reveal"><h3>จำนวนสินค้า</h3><p class="metric">55</p></div>
+          <div class="glass-card reveal"><h3>กราฟยอดขาย</h3><div class="bars"><span style="height: 60%"></span><span style="height: 82%"></span><span style="height: 70%"></span><span style="height: 92%"></span><span style="height: 88%"></span></div></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="contact">
+      <div class="container footer-inner">
+        <div>
+          <a class="brand" href="#" data-view="landing">
+            <span class="brand-mark">N</span>
+            <span class="brand-text">NawaShop</span>
+          </a>
+          <p>ร้านค้าเกมและยูทิลิตี้สำหรับคนที่ต้องการประสบการณ์ระดับพรีเมียม</p>
+        </div>
+        <div class="footer-links">
+          <a href="#" data-view="landing">Home</a>
+          <a href="#" data-view="product">Store</a>
+          <a href="#" data-view="topup">Top Up</a>
+          <a href="#" data-view="orders">Orders</a>
+        </div>
+        <div class="socials">
+          <a href="#">Discord</a>
+          <a href="#">Telegram</a>
+          <a href="#">X</a>
+        </div>
+      </div>
+      <div class="container footer-bottom"><span>© <span id="year"></span> NawaShop. All rights reserved.</span></div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

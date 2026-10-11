@@ -1,0 +1,776 @@
+/* =========================================================
+   NEON SURVIVOR: CYBER ARENA  —  style.css
+   ธีม Cyberpunk / Neon : ดำ น้ำเงินไฟฟ้า ม่วง แดง
+   ========================================================= */
+
+:root {
+  --bg-0: #04060f;
+  --bg-1: #070c1c;
+  --cyan: #00e5ff;
+  --blue: #2f6bff;
+  --violet: #a44dff;
+  --pink: #ff2fb9;
+  --red: #ff2b47;
+  --orange: #ffa62b;
+  --green: #2bff88;
+  --text: #dff1ff;
+  --muted: #7f92b6;
+  --line: rgba(0, 229, 255, 0.35);
+  --glow-cyan: 0 0 10px rgba(0, 229, 255, .85), 0 0 28px rgba(0, 229, 255, .45);
+  --panel-bg: rgba(6, 12, 28, .82);
+  --font: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: radial-gradient(120% 90% at 50% 0%, #0a1230 0%, var(--bg-1) 45%, var(--bg-0) 100%);
+  color: var(--text);
+  font-family: var(--font);
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+/* พื้นหลังลายกริดเรืองแสง (CSS layer เสริมจาก canvas) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, .055) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  width: min(96vw, 560px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  user-select: none;
+}
+
+/* ===================== STAGE / CANVAS ===================== */
+#stage {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid rgba(47, 107, 255, .55);
+  box-shadow:
+    0 0 24px rgba(0, 229, 255, .20),
+    0 0 60px rgba(164, 77, 255, .18),
+    inset 0 0 40px rgba(0, 0, 0, .85);
+  background: #03050e;
+}
+
+#game {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+}
+
+/* ===================== HUD ===================== */
+#hud {
+  position: absolute;
+  inset: 0;
+  padding: 10px 12px;
+  pointer-events: none;
+}
+
+.row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+#hearts {
+  display: flex;
+  gap: 6px;
+}
+
+.heart {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--red);
+  text-shadow: 0 0 8px rgba(255, 43, 71, .95), 0 0 20px rgba(255, 43, 71, .6);
+  transition: color .25s, text-shadow .25s, transform .25s, opacity .25s;
+}
+
+.heart.dead {
+  color: #3a3f4d;
+  text-shadow: none;
+  opacity: .55;
+  transform: scale(.86);
+  animation: heartBreak .45s ease;
+}
+
+@keyframes heartBreak {
+  0% {
+    transform: scale(1.35);
+    color: #fff;
+  }
+
+  40% {
+    transform: scale(.7) rotate(-12deg);
+  }
+
+  100% {
+    transform: scale(.86) rotate(0);
+  }
+}
+
+.scores {
+  display: flex;
+  gap: 8px;
+}
+
+.score-box {
+  min-width: 74px;
+  padding: 5px 10px;
+  text-align: right;
+  border-radius: 10px;
+  background: rgba(4, 9, 22, .72);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 12px rgba(0, 229, 255, .10);
+}
+
+.score-box small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+.score-box b {
+  font-size: 18px;
+  color: #fff;
+  text-shadow: var(--glow-cyan);
+}
+
+.score-box.best b {
+  color: var(--cyan);
+}
+
+.score-box.time b {
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(43, 255, 136, .7);
+}
+
+/* ===================== ปุ่มเล็กบนจอ ===================== */
+.chip-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 6;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text);
+  background: rgba(4, 9, 22, .8);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+
+.chip-btn.right {
+  right: auto;
+  left: auto;
+  top: auto;
+}
+
+#pauseBtn {
+  top: 8px;
+  right: 108px;
+}
+
+.chip-btn:hover {
+  background: rgba(0, 229, 255, .18);
+  box-shadow: var(--glow-cyan);
+}
+
+/* ===================== BOTTOM HUD ===================== */
+#bottomHud {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--panel-bg);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 26px rgba(0, 229, 255, .07);
+}
+
+.energy-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+.energy-label b {
+  color: var(--cyan);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-shadow: var(--glow-cyan);
+}
+
+#energyBar {
+  position: relative;
+  height: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 229, 255, .08);
+  border: 1px solid rgba(0, 229, 255, .3);
+}
+
+#energyFill {
+  height: 100%;
+  width: 50%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--blue), var(--cyan) 60%, #b6f6ff);
+  box-shadow: 0 0 14px rgba(0, 229, 255, .85);
+  transition: width .08s linear, background .2s;
+}
+
+#energyFill.low {
+  background: linear-gradient(90deg, #ff5a2b, var(--orange));
+  box-shadow: 0 0 14px rgba(255, 166, 43, .85);
+}
+
+#energyFill.full {
+  background: linear-gradient(90deg, var(--cyan), #ffffff);
+}
+
+#skillBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.skill {
+  position: relative;
+  padding: 8px 4px 6px;
+  text-align: center;
+  border-radius: 12px;
+  background: rgba(6, 14, 32, .9);
+  border: 1px solid rgba(47, 107, 255, .45);
+  overflow: hidden;
+  transition: box-shadow .2s, border-color .2s, transform .1s;
+}
+
+.skill .key {
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.skill .ico {
+  display: block;
+  font-size: 20px;
+  line-height: 1.25;
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, .8));
+}
+
+.skill .nm {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text);
+  opacity: .85;
+}
+
+/* ชั้น Cooldown ทึบจากล่างขึ้นบน */
+.skill .cd {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0%;
+  background: rgba(2, 6, 16, .82);
+  transition: height .06s linear;
+  pointer-events: none;
+}
+
+.skill.ready {
+  border-color: var(--cyan);
+  box-shadow: 0 0 14px rgba(0, 229, 255, .45);
+  animation: skillPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes skillPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 229, 255, .35);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(0, 229, 255, .7);
+  }
+}
+
+.skill.cooling {
+  border-color: rgba(255, 43, 71, .5);
+}
+
+.skill.active {
+  border-color: var(--green);
+  box-shadow: 0 0 20px rgba(43, 255, 136, .8);
+}
+
+/* ===================== TOUCH CONTROLS ===================== */
+#touchControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.pad {
+  display: flex;
+  gap: 8px;
+}
+
+.touch-btn {
+  width: 62px;
+  height: 62px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  background: rgba(8, 16, 36, .85);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  touch-action: none;
+  transition: background .12s, transform .06s, box-shadow .12s;
+}
+
+.touch-btn.small {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+  border-radius: 12px;
+}
+
+.touch-btn:active,
+.touch-btn.held {
+  background: rgba(0, 229, 255, .28);
+  box-shadow: var(--glow-cyan);
+  transform: scale(.94);
+}
+
+/* ===================== OVERLAY / MENU ===================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 5, 14, .82);
+  backdrop-filter: blur(6px);
+}
+
+.overlay.show {
+  display: flex;
+}
+
+.panel {
+  width: min(94vw, 520px);
+  max-height: 94vh;
+  overflow-y: auto;
+  padding: 22px 20px 24px;
+  text-align: center;
+  border-radius: 20px;
+  background: var(--panel-bg);
+  border: 1px solid var(--line);
+  box-shadow: 0 0 40px rgba(0, 229, 255, .22), inset 0 0 50px rgba(0, 0, 0, .7);
+}
+
+.panel.small {
+  width: min(92vw, 340px);
+}
+
+.panel h1 {
+  margin: 0 0 2px;
+  font-size: clamp(26px, 7vw, 40px);
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow: 0 0 12px var(--cyan), 0 0 34px rgba(164, 77, 255, .8);
+}
+
+.panel h1.danger {
+  color: #fff;
+  text-shadow: 0 0 14px var(--red), 0 0 40px rgba(255, 43, 71, .8);
+}
+
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: clamp(12px, 3.4vw, 16px);
+  letter-spacing: 8px;
+  color: var(--violet);
+  text-shadow: 0 0 12px rgba(164, 77, 255, .9);
+}
+
+.tagline {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* ตัวอักษร glitch เบา ๆ บนหัวข้อ */
+.glitch {
+  position: relative;
+}
+
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 0;
+  color: var(--pink);
+  opacity: .55;
+  clip-path: inset(0 0 55% 0);
+  animation: glitch 2.6s infinite steps(2);
+  pointer-events: none;
+}
+
+@keyframes glitch {
+
+  0%,
+  92%,
+  100% {
+    transform: translate(0, 0);
+    opacity: .25;
+  }
+
+  93% {
+    transform: translate(-3px, 1px);
+    opacity: .7;
+  }
+
+  96% {
+    transform: translate(3px, -2px);
+    opacity: .6;
+  }
+}
+
+button.primary,
+button.ghost {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform .06s, box-shadow .18s, background .18s;
+}
+
+button.primary {
+  color: #02121a;
+  background: linear-gradient(180deg, var(--cyan), #00a9d6);
+  border: 1px solid #9bf3ff;
+  box-shadow: 0 0 22px rgba(0, 229, 255, .6);
+}
+
+button.primary:hover {
+  box-shadow: 0 0 34px rgba(0, 229, 255, .95);
+}
+
+button.primary:active {
+  transform: scale(.975);
+}
+
+button.ghost {
+  color: var(--text);
+  background: rgba(0, 229, 255, .06);
+  border: 1px solid var(--line);
+}
+
+button.ghost:hover {
+  background: rgba(0, 229, 255, .16);
+}
+
+.help {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+  text-align: left;
+}
+
+.help-col {
+  flex: 1;
+}
+
+.help-col h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+}
+
+.help-col ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 18px;
+  padding: 1px 5px;
+  margin-right: 2px;
+  font-family: var(--font);
+  font-size: 10px;
+  font-weight: 800;
+  color: #02121a;
+  background: var(--cyan);
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(0, 229, 255, .7);
+}
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 6px 0 12px;
+}
+
+.result-box {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(4, 9, 22, .8);
+  border: 1px solid var(--line);
+}
+
+.result-box small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+.result-box b {
+  font-size: 22px;
+  color: #fff;
+  text-shadow: var(--glow-cyan);
+}
+
+.record {
+  min-height: 20px;
+  margin: 0 0 6px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--orange);
+  text-shadow: 0 0 14px rgba(255, 166, 43, .85);
+}
+
+/* ===================== ข้อความกลางจอ ===================== */
+#centerMsg {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%) scale(.8);
+  z-index: 20;
+  pointer-events: none;
+  text-align: center;
+  font-size: clamp(22px, 6vw, 44px);
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #fff;
+  opacity: 0;
+  white-space: nowrap;
+  text-shadow: 0 0 16px var(--cyan), 0 0 44px rgba(0, 229, 255, .8);
+}
+
+#centerMsg.show {
+  animation: msgPop 1.6s ease forwards;
+}
+
+@keyframes msgPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.7);
+  }
+
+  14% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  24% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  78% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -55%) scale(1.02);
+  }
+}
+
+#centerMsg.danger {
+  text-shadow: 0 0 16px var(--red), 0 0 44px rgba(255, 43, 71, .9);
+  color: #fff;
+}
+
+#centerMsg.good {
+  text-shadow: 0 0 16px var(--green), 0 0 44px rgba(43, 255, 136, .9);
+  color: #fff;
+}
+
+/* ===================== COMBO ===================== */
+#comboLabel {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+  font-size: clamp(16px, 4vw, 26px);
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--orange);
+  text-shadow: 0 0 14px rgba(255, 166, 43, .9);
+  opacity: 0;
+  transition: opacity .2s, transform .2s;
+}
+
+#comboLabel.show {
+  opacity: 1;
+}
+
+#comboLabel.bump {
+  transform: translateX(-50%) scale(1.18);
+}
+
+/* แจ้งเตือนการหมุนจอ */
+#rotate {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: rgba(2, 5, 14, .94);
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 640px) {
+  body {
+    padding: 6px;
+  }
+
+  #app {
+    width: 100%;
+    gap: 8px;
+  }
+
+  #stage {
+    border-radius: 14px;
+  }
+
+  .heart {
+    font-size: 22px;
+  }
+
+  .score-box {
+    min-width: 62px;
+    padding: 4px 8px;
+  }
+
+  .score-box b {
+    font-size: 15px;
+  }
+
+  #pauseBtn {
+    right: 96px;
+  }
+
+  #bottomHud {
+    padding: 8px;
+    border-radius: 13px;
+  }
+
+  .help {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .touch-btn {
+    width: 56px;
+    height: 56px;
+  }
+
+  .touch-btn.small {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  #touchControls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    padding: 0 8px;
+  }
+
+  #app {
+    width: min(70vw, 420px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch::after {
+    animation: none;
+  }
+
+  .skill.ready {
+    animation: none;
+  }
+}

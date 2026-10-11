@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NEON SURVIVOR: CYBER ARENA</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- ======= พื้นที่เล่นเกม ======= -->
+    <div id="stage">
+      <canvas id="game" width="480" height="720"></canvas>
+
+      <!-- ปุ่มเปิด/ปิดเสียง -->
+      <button id="soundBtn" class="chip-btn" type="button" aria-label="เปิดปิดเสียง">🔊 SOUND</button>
+
+      <!-- ปุ่ม Pause (มือถือ/เมาส์) -->
+      <button id="pauseBtn" class="chip-btn right" type="button" aria-label="หยุดชั่วคราว">❚❚ PAUSE</button>
+
+      <!-- ======= HUD ======= -->
+      <div id="hud">
+        <div class="row-top">
+          <div id="hearts" aria-label="หัวใจ">
+            <span class="heart" data-i="0">❤</span>
+            <span class="heart" data-i="1">❤</span>
+            <span class="heart" data-i="2">❤</span>
+          </div>
+
+          <div class="scores">
+            <div class="score-box">
+              <small>SCORE</small>
+              <b id="score">0</b>
+            </div>
+            <div class="score-box best">
+              <small>BEST</small>
+              <b id="best">0</b>
+            </div>
+            <div class="score-box time">
+              <small>SURVIVED</small>
+              <b id="time">0:00</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= แถบพลังงาน + สกิล ======= -->
+    <div id="bottomHud">
+      <div id="energyWrap">
+        <div class="energy-label">
+          <span>ENERGY</span>
+          <b id="energyText">50 / 100</b>
+        </div>
+        <div id="energyBar">
+          <div id="energyFill"></div>
+        </div>
+      </div>
+
+      <div id="skillBar">
+        <div class="skill" data-skill="shieldQ">
+          <span class="key">Q</span>
+          <span class="ico">🛡</span>
+          <span class="nm">SHIELD</span>
+          <span class="cd"></span>
+        </div>
+        <div class="skill" data-skill="freezeE">
+          <span class="key">E</span>
+          <span class="ico">❄</span>
+          <span class="nm">FREEZE</span>
+          <span class="cd"></span>
+        </div>
+        <div class="skill" data-skill="novaR">
+          <span class="key">R</span>
+          <span class="ico">💥</span>
+          <span class="nm">NOVA</span>
+          <span class="cd"></span>
+        </div>
+        <div class="skill" data-skill="dashShift">
+          <span class="key">⇧</span>
+          <span class="ico">⚡</span>
+          <span class="nm">DASH</span>
+          <span class="cd"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= ปุ่มควบคุมแบบสัมผัส (มือถือ) ======= -->
+    <div id="touchControls">
+      <div class="pad">
+        <button class="touch-btn" data-move="left" type="button">◀</button>
+        <button class="touch-btn" data-move="right" type="button">▶</button>
+      </div>
+      <div class="pad skills">
+        <button class="touch-btn small" data-skill="dashShift" type="button">⚡</button>
+        <button class="touch-btn small" data-skill="novaR" type="button">💥</button>
+        <button class="touch-btn small" data-skill="freezeE" type="button">❄</button>
+        <button class="touch-btn small" data-skill="shieldQ" type="button">🛡</button>
+      </div>
+    </div>
+
+    <!-- ======= ข้อความกลางจอ (SHIELD ACTIVATED / TIME FROZEN / DANGER LEVEL UP) ======= -->
+    <div id="centerMsg"></div>
+
+    <!-- ======= Combo ======= -->
+    <div id="comboLabel"></div>
+
+    <!-- ======= หน้าเมนู ======= -->
+    <div id="startScreen" class="overlay show">
+      <div class="panel">
+        <h1 class="glitch" data-text="NEON SURVIVOR">NEON SURVIVOR</h1>
+        <h2>CYBER ARENA</h2>
+        <p class="tagline">เอาชีวิตรอดในสนามประลองไซเบอร์ — หลบ เก็บพลังงาน แล้วปลดปล่อยพลังพิเศษ</p>
+
+        <button id="playBtn" class="primary" type="button">PLAY ▶</button>
+
+        <div class="help">
+          <div class="help-col">
+            <h3>CONTROL</h3>
+            <ul>
+              <li><kbd>A</kbd><kbd>D</kbd> / <kbd>←</kbd><kbd>→</kbd> / <kbd>W</kbd><kbd>S</kbd> — เคลื่อนที่</li>
+              <li><kbd>Q</kbd> — Energy Shield (โล่ 3 วิ)</li>
+              <li><kbd>E</kbd> — Time Freeze (หยุดบล็อก 2.5 วิ)</li>
+              <li><kbd>R</kbd> — Nova Blast (ใช้ 30 Energy)</li>
+              <li><kbd>Shift</kbd> — Dash (พุ่งตัว)</li>
+              <li><kbd>Esc</kbd> — Pause / Resume</li>
+            </ul>
+          </div>
+          <div class="help-col">
+            <h3>OBJECTIVE</h3>
+            <ul>
+              <li>❤ มี 3 หัวใจ — ชนบล็อกเสีย 1 ดวง</li>
+              <li>🛡 เสียหัวใจครั้งแรกจะได้โล่อัตโนมัติ 3 วิ</li>
+              <li>💠 เก็บ Energy Orb เพื่อเติมพลังงาน</li>
+              <li>🔥 หลบต่อเนื่องเพื่อเพิ่ม Combo โบนัส</li>
+              <li>⚠ ทุก 30 วิ ระดับอันตรายจะเพิ่มขึ้น</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= หน้า Pause ======= -->
+    <div id="pauseScreen" class="overlay">
+      <div class="panel small">
+        <h1>PAUSED</h1>
+        <p class="tagline">เกมหยุดชั่วคราว</p>
+        <button id="resumeBtn" class="primary" type="button">RESUME ▶</button>
+        <button id="restartBtnPause" class="ghost" type="button">RESTART</button>
+      </div>
+    </div>
+
+    <!-- ======= หน้า Game Over ======= -->
+    <div id="gameOverScreen" class="overlay">
+      <div class="panel">
+        <h1 class="danger">GAME OVER</h1>
+        <p class="tagline">โดนบล็อกจนหัวใจหมด</p>
+
+        <div class="resultGrid">
+          <div class="result-box"><small>SCORE</small><b id="finalScore">0</b></div>
+          <div class="result-box"><small>BEST</small><b id="finalBest">0</b></div>
+          <div class="result-box"><small>SURVIVED</small><b id="finalTime">0:00</b></div>
+          <div class="result-box"><small>LEVEL</small><b id="finalLevel">1</b></div>
+        </div>
+
+        <p id="newRecord" class="record"></p>
+
+        <button id="playAgainBtn" class="primary" type="button">PLAY AGAIN ⟳</button>
+        <button id="menuBtn" class="ghost" type="button">MAIN MENU</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
